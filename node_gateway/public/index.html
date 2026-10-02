@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CurrencyFlow — Fullstack Python & Node.js Currency Converter</title>
+  <meta name="description" content="Modern real-time currency converter, batch matrix, historical trend charts, and financial analytics powered by Python FastAPI & Node.js Express.">
+  
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Background Glow Accents -->
+  <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
+
+  <div class="app-layout">
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="brand-container">
+        <div class="brand-icon-wrapper">
+          <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+            <path d="M12 6v2m0 8v2"></path>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <h1 class="brand-title">CurrencyFlow</h1>
+          <p class="brand-subtitle">Python Analytics &bull; Node.js Gateway</p>
+        </div>
+      </div>
+
+      <!-- System Health Indicator Badges -->
+      <div class="status-ribbon">
+        <div class="status-chip" id="pythonStatusChip" title="Python FastAPI Analytics Microservice">
+          <span class="status-dot"></span>
+          <span class="status-label">Python: <strong id="pythonStatusText">Checking...</strong></span>
+        </div>
+        <div class="status-chip" id="nodeStatusChip" title="Node.js Express Gateway">
+          <span class="status-dot"></span>
+          <span class="status-label">Gateway: <strong id="nodeStatusText">Online</strong></span>
+        </div>
+        <button class="icon-action-btn" id="fullscreenToggleBtn" aria-label="Toggle fullscreen mode" title="Toggle Fullscreen (F11)">
+          <svg class="fs-icon-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+          <svg class="fs-icon-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;"><path d="M4 14h6m0 0v6m0-6L3 21m17-7h-6m0 0v6m0-6l7 7M10 4v6m0 0H4m6 0L3 3m10 7V4m0 6h6m-6 0l7-7"></path></svg>
+        </button>
+        <button class="theme-toggle-btn icon-action-btn" id="themeToggleBtn" aria-label="Toggle light or dark theme" title="Toggle theme">
+          <svg class="theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+          <svg class="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m14.14-14.14-1.41 1.41"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Quick Favorites Bar -->
+    <div class="favorites-bar-wrapper">
+      <div class="favorites-label">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <span>Favorites:</span>
+      </div>
+      <div class="favorites-list" id="quickFavoritesList">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs" role="tablist" aria-label="Currency Converter Views">
+      <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="quickTab" id="tabQuickBtn" data-tab="quickTab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        <span>Quick Convert</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="batchTab" id="tabBatchBtn" data-tab="batchTab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        <span>Batch Matrix</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="chartsTab" id="tabChartsBtn" data-tab="chartsTab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
+        <span>Historical Trends</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="analyticsTab" id="tabAnalyticsBtn" data-tab="analyticsTab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path><path d="M12 6v6l4 2"></path></svg>
+        <span>Market Analytics</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="historyTab" id="tabHistoryBtn" data-tab="historyTab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-9-9 9 9 0 0 1 9 9z"></path></svg>
+        <span>History & Logs</span>
+      </button>
+    </nav>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+
+      <!-- ================= TAB 1: QUICK CONVERT ================= -->
+      <section class="tab-panel active" id="quickTab" role="tabpanel" aria-labelledby="tabQuickBtn">
+        <div class="quick-view-layout">
+          <!-- Main Converter Card -->
+          <div class="converter-card glass-panel" id="mainConverterCard">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">Real-Time Currency Conversion</h2>
+                <p class="card-desc">Instant cross-currency exchange rates with fee simulation</p>
+              </div>
+              <button class="btn-favorite-toggle" id="btnToggleFavorite" title="Add or remove from favorite currency pairs" aria-label="Toggle favorite pair">
+                <svg id="favoriteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              </button>
+            </div>
+
+            <div class="converter-grid">
+              <!-- FROM CURRENCY -->
+              <div class="currency-input-group">
+                <label for="fromAmountInput" class="input-label">You Pay</label>
+                <div class="input-box" id="fromInputBox">
+                  <input type="number" id="fromAmountInput" class="amount-field" value="1000" min="0.01" step="any" placeholder="0.00" aria-label="Amount to convert">
+                  <button type="button" class="currency-select-trigger" id="fromCurrencyBtn" aria-haspopup="dialog" aria-label="Select source currency">
+                    <span class="flag-icon" id="fromFlag">🇺🇸</span>
+                    <span class="currency-code" id="fromCode">USD</span>
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                </div>
+
+                <!-- Quick Presets -->
+                <div class="quick-chips">
+                  <button type="button" class="chip" data-amount="100">$100</button>
+                  <button type="button" class="chip" data-amount="500">$500</button>
+                  <button type="button" class="chip active" data-amount="1000">$1,000</button>
+                  <button type="button" class="chip" data-amount="5000">$5,000</button>
+                  <button type="button" class="chip" data-amount="10000">$10,000</button>
+                </div>
+              </div>
+
+              <!-- SWAP ACTION -->
+              <div class="swap-action-container">
+                <button type="button" class="btn-swap" id="btnSwapCurrencies" title="Swap currencies (Press S)" aria-label="Swap currencies">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 16V4m0 0L3 8m4-4l4 4m6 4v12m0 0l4-4m-4 4l-4-4"/></svg>
+                </button>
+              </div>
+
+              <!-- TO CURRENCY -->
+              <div class="currency-input-group">
+                <div class="label-with-copy">
+                  <label for="toAmountOutput" class="input-label">You Receive (Estimated)</label>
+                  <button type="button" class="btn-copy-result" id="btnCopyResult" title="Copy converted amount" aria-label="Copy converted amount">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <span>Copy</span>
+                  </button>
+                </div>
+                <div class="input-box output-box" id="toOutputBox">
+                  <input type="text" id="toAmountOutput" class="amount-field result-field" readonly placeholder="0.00" aria-label="Converted amount output">
+                  <button type="button" class="currency-select-trigger" id="toCurrencyBtn" aria-haspopup="dialog" aria-label="Select target currency">
+                    <span class="flag-icon" id="toFlag">🇪🇺</span>
+                    <span class="currency-code" id="toCode">EUR</span>
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                </div>
+
+                <!-- Inverted Rate Tag -->
+                <div class="conversion-subtext" id="inverseRateText">
+                  1 EUR = 1.127 USD
+                </div>
+              </div>
+            </div>
+
+            <!-- Fee and Commission Simulator -->
+            <div class="fee-calculator-panel">
+              <div class="fee-header">
+                <span class="fee-title">Transfer Fee & Spread Simulator</span>
+                <span class="fee-badge" id="feeBadgeText">0.0% (Interbank Rate)</span>
+              </div>
+              <div class="fee-options-row">
+                <button type="button" class="fee-pill active" data-fee="0">0% (Interbank)</button>
+                <button type="button" class="fee-pill" data-fee="0.5">0.5% (Low-cost)</button>
+                <button type="button" class="fee-pill" data-fee="1.5">1.5% (Bank standard)</button>
+                <button type="button" class="fee-pill" data-fee="3.0">3.0% (Retail / Airport)</button>
+                <div class="custom-fee-input">
+                  <span>Custom:</span>
+                  <input type="number" id="customFeeInput" min="0" max="20" step="0.1" value="0.0" aria-label="Custom fee percentage">%
+                </div>
+              </div>
+              <div class="fee-breakdown-details" id="feeBreakdownDetails">
+                <span>Gross Converted: <strong id="grossConvertedText">€0.00</strong></span>
+                <span>Deducted Fee: <strong id="deductedFeeText">€0.00</strong></span>
+                <span>Net Payout: <strong id="netPayoutText">€0.00</strong></span>
+              </div>
+            </div>
+
+            <!-- Rate Overview Footer -->
+            <div class="card-footer-info">
+              <div class="rate-summary-badge">
+                <span class="rate-label">Live Exchange Rate:</span>
+                <span class="rate-value" id="currentExchangeRateText">1 USD = 0.8873 EUR</span>
+              </div>
+              <div class="timestamp-badge">
+                <svg class="spin-on-update" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span id="rateTimestampText">Synced just now</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Widescreen Side Overview Panel -->
+          <div class="market-overview-card glass-panel" id="sideOverviewCard">
+            <div class="card-header">
+              <div>
+                <h3 class="side-card-title">Live Market Ticker</h3>
+                <p class="card-desc">Top currencies vs <span id="sideBaseCurrCode">USD</span></p>
+              </div>
+              <span class="pulse-indicator-badge">Live</span>
+            </div>
+
+            <!-- Quick Matrix Ticker List -->
+            <div class="side-ticker-list" id="sideTickerList">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Quick Conversion Tiers Box -->
+            <div class="quick-tiers-box">
+              <span class="section-micro-title">Common Amount Tiers</span>
+              <div class="tiers-grid" id="tiersGrid">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 2: MULTI-CURRENCY MATRIX ================= -->
+      <section class="tab-panel" id="batchTab" role="tabpanel" aria-labelledby="tabBatchBtn">
+        <div class="batch-card glass-panel">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Multi-Currency Batch Matrix</h2>
+              <p class="card-desc">Simultaneously convert a single amount into multiple global currencies</p>
+            </div>
+            <div class="batch-controls">
+              <button type="button" class="btn-secondary" id="btnSelectAllBatch">Select All Major</button>
+              <button type="button" class="btn-secondary" id="btnResetBatch">Reset Defaults</button>
+            </div>
+          </div>
+
+          <div class="batch-input-bar">
+            <div class="batch-amount-wrapper">
+              <label for="batchAmountInput" class="input-label">Base Amount</label>
+              <input type="number" id="batchAmountInput" class="amount-field" value="1000" min="1" step="any">
+            </div>
+            <div class="batch-base-selector">
+              <label class="input-label">Base Currency</label>
+              <button type="button" class="currency-select-trigger" id="batchBaseCurrencyBtn" aria-haspopup="dialog">
+                <span class="flag-icon" id="batchBaseFlag">🇺🇸</span>
+                <span class="currency-code" id="batchBaseCode">USD</span>
+                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+            <button type="button" class="btn-primary" id="btnRunBatchConvert">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+              <span>Refresh Matrix</span>
+            </button>
+          </div>
+
+          <!-- Target Currency Checkbox Chips -->
+          <div class="batch-targets-selection">
+            <span class="section-micro-title">Select Target Currencies to Include:</span>
+            <div class="currency-chips-grid" id="batchCurrencyChipsGrid">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Batch Results Matrix Table / Grid -->
+          <div class="batch-results-container">
+            <div class="table-responsive">
+              <table class="batch-table" id="batchResultsTable">
+                <thead>
+                  <tr>
+                    <th>Currency</th>
+                    <th>Code & Symbol</th>
+                    <th>Exchange Rate</th>
+                    <th>Converted Output</th>
+                    <th>Share of Base</th>
+                    <th>Quick Action</th>
+                  </tr>
+                </thead>
+                <tbody id="batchTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: HISTORICAL CHARTS ================= -->
+      <section class="tab-panel" id="chartsTab" role="tabpanel" aria-labelledby="tabChartsBtn">
+        <div class="charts-card glass-panel">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Interactive Historical Trends</h2>
+              <p class="card-desc">Examine exchange rate movements and historical performance</p>
+            </div>
+            <div class="chart-timeframe-selectors">
+              <button type="button" class="timeframe-btn" data-timeframe="7d">7D</button>
+              <button type="button" class="timeframe-btn active" data-timeframe="30d">30D</button>
+              <button type="button" class="timeframe-btn" data-timeframe="90d">90D</button>
+              <button type="button" class="timeframe-btn" data-timeframe="1y">1Y</button>
+            </div>
+          </div>
+
+          <!-- Chart Controls Strip -->
+          <div class="chart-pair-strip">
+            <div class="chart-pair-display">
+              <span class="flag-icon" id="chartFromFlag">🇺🇸</span>
+              <span class="pair-text" id="chartPairTitle">USD to EUR</span>
+              <span class="flag-icon" id="chartToFlag">🇪🇺</span>
+            </div>
+            <div class="chart-trend-tag bullish" id="chartTrendBadge">
+              <span class="trend-icon">▲</span>
+              <span id="chartTrendText">+1.24% Bullish</span>
+            </div>
+          </div>
+
+          <!-- Chart Canvas Container -->
+          <div class="chart-canvas-wrapper" id="chartContainer">
+            <canvas id="historicalChartCanvas" width="900" height="340"></canvas>
+            <div class="chart-tooltip" id="chartTooltip"></div>
+          </div>
+
+          <!-- Historical Metric Stats Grid -->
+          <div class="chart-stats-grid">
+            <div class="stat-card">
+              <span class="stat-name">Period Low</span>
+              <span class="stat-value text-red" id="statPeriodLow">-</span>
+              <span class="stat-sub">Lowest rate recorded</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-name">Period High</span>
+              <span class="stat-value text-green" id="statPeriodHigh">-</span>
+              <span class="stat-sub">Peak rate recorded</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-name">Period Average</span>
+              <span class="stat-value" id="statPeriodAvg">-</span>
+              <span class="stat-sub">Mean exchange rate</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-name">Net Movement</span>
+              <span class="stat-value" id="statPeriodChange">-</span>
+              <span class="stat-sub">Start to end change</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: MARKET ANALYTICS ================= -->
+      <section class="tab-panel" id="analyticsTab" role="tabpanel" aria-labelledby="tabAnalyticsBtn">
+        <div class="analytics-card glass-panel">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Python Statistical Analytics & Advisory</h2>
+              <p class="card-desc">Automated volatility metrics, standard deviation, and conversion window guidance</p>
+            </div>
+            <button type="button" class="btn-secondary" id="btnRefreshAnalytics">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+              <span>Refresh Analytics</span>
+            </button>
+          </div>
+
+          <div class="analytics-content-grid">
+            <!-- Advisory Recommendation Card -->
+            <div class="insight-banner">
+              <div class="insight-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              </div>
+              <div class="insight-body">
+                <h3 class="insight-title">Automated Advisory Insight</h3>
+                <p class="insight-desc" id="analyticsSummaryText">Analyzing pair data via Python microservice...</p>
+              </div>
+            </div>
+
+            <!-- Volatility Card -->
+            <div class="analytics-metric-box">
+              <div class="metric-top">
+                <span class="metric-label">Annualized Volatility Score</span>
+                <span class="volatility-tag" id="analyticsVolTag">Moderate</span>
+              </div>
+              <div class="metric-big-number" id="analyticsVolScore">--%</div>
+              <div class="volatility-gauge-bar">
+                <div class="gauge-fill" id="volatilityGaugeFill" style="width: 35%;"></div>
+              </div>
+              <p class="metric-explanation">Calculated from 30-day log standard deviation of exchange rates annualized across standard trading days.</p>
+            </div>
+
+            <!-- Trajectory Card -->
+            <div class="analytics-metric-box">
+              <div class="metric-top">
+                <span class="metric-label">30-Day Rate Trajectory</span>
+                <span class="metric-period">Last 30 Days</span>
+              </div>
+              <div class="metric-big-number" id="analyticsTrajectoryNumber">--%</div>
+              <div class="trajectory-indicator-wrapper">
+                <span class="stat-sub">Directional trend of the base currency against target</span>
+              </div>
+              <p class="metric-explanation" id="analyticsBestDateText">Best historical rate recorded on: --</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 5: HISTORY & LOGS ================= -->
+      <section class="tab-panel" id="historyTab" role="tabpanel" aria-labelledby="tabHistoryBtn">
+        <div class="history-card glass-panel">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Conversion History & Favorites</h2>
+              <p class="card-desc">Persistent conversion logs stored in Node.js gateway backend</p>
+            </div>
+            <div class="history-actions">
+              <button type="button" class="btn-secondary" id="btnExportCSV">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Export CSV</span>
+              </button>
+              <button type="button" class="btn-secondary" id="btnExportJSON">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <span>Export JSON</span>
+              </button>
+              <button type="button" class="btn-danger" id="btnClearHistory">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                <span>Clear History</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- History Table -->
+          <div class="history-table-wrapper">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Pair</th>
+                  <th>Original Amount</th>
+                  <th>Rate</th>
+                  <th>Converted Net</th>
+                  <th>Fee Applied</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+            <div class="empty-history-placeholder" id="emptyHistoryPlaceholder" style="display: none;">
+              <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <p>No conversion history logged yet.</p>
+              <span>Perform a conversion in the Quick Convert tab to record history.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-links">
+        <span>CurrencyFlow Microservices Architecture</span>
+        &bull;
+        <span>FastAPI Python Engine</span>
+        &bull;
+        <span>Node.js Gateway</span>
+      </div>
+      <div class="footer-version">v1.0.0 &bull; Ready &amp; Connected</div>
+    </footer>
+  </div>
+
+  <!-- CURRENCY SELECTOR MODAL DIALOG -->
+  <dialog class="currency-modal" id="currencyModal" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Select Currency</h3>
+        <button type="button" class="btn-close-modal" id="btnCloseModal" aria-label="Close currency selection modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="currencySearchInput" class="search-input" placeholder="Search currency code, name, or country..." autocomplete="off">
+      </div>
+
+      <div class="currency-list-scrollable" id="currencyListContainer" role="listbox">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </dialog>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Client-side Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/chart.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+[
+  {"from": "USD", "to": "EUR"},
+  {"from": "GBP", "to": "USD"},
+  {"from": "USD", "to": "JPY"},
+  {"from": "EUR", "to": "GBP"},
+  {"from": "USD", "to": "INR"},
+  {"from": "USD", "to": "CAD"}
+]

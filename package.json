@@ -1,0 +1,18 @@
+{
+  "name": "currency-converter-fullstack",
+  "version": "1.0.0",
+  "description": "Fullstack Currency Converter & Market Analytics using Python FastAPI and Node.js Express",
+  "scripts": {
+    "install:all": "npm install && cd node_gateway && npm install",
+    "python:start": ".\\.venv\\Scripts\\python.exe -m uvicorn python_service.app.main:app --host 127.0.0.1 --port 8000",
+    "node:start": "node node_gateway/src/server.js",
+    "dev": "concurrently -k -n \"PYTHON,NODE\" -c \"cyan,green\" \"npm run python:start\" \"npm run node:start\"",
+    "start": "npm run dev",
+    "test:python": ".\\.venv\\Scripts\\python.exe python_service/tests/test_api.py",
+    "test:node": "node node_gateway/tests/gateway.test.js",
+    "test": "npm run test:python && npm run test:node"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
